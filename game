@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Endless Runner Game</title>
+    <style>
+        body { margin: 0; padding: 0; display: flex; justify-content: center; align-items: center; height: 100vh; background: #f4f4f4; }
+        canvas { border: 1px solid #000; }
+    </style>
+</head>
+<body>
+    <canvas id="gameCanvas" width="800" height="400"></canvas>
+    <script>
+        const canvas = document.getElementById('gameCanvas');
+        const ctx = canvas.getContext('2d');
+
+        // Game settings
+        const gravity = 0.5;
+        const jumpPower = 10;
+        const groundHeight = canvas.height - 50;
+        let playerY = groundHeight;
+        let velocityY = 0;
+        let isJumping = false;
+
+        // Event listener for jumping
+        document.addEventListener('keydown', (event) => {
+            if (event.code === 'Space' && !isJumping) {
+                velocityY = -jumpPower;
+                isJumping = true;
+            }
+        });
+
+        // Game loop
+        function gameLoop() {
+            // Clear the canvas
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+            // Apply gravity
+            if (playerY < groundHeight) {
+                velocityY += gravity;
+            } else {
+                velocityY = 0;
+                playerY = groundHeight;
+                isJumping = false;
+            }
+
+            // Update player position
+            playerY += velocityY;
+
+            // Draw ground
+            ctx.fillStyle = '#000';
+            ctx.fillRect(0, groundHeight, canvas.width, 50);
+
+            // Draw player (pet)
+            ctx.fillStyle = '#ff0000';
+            ctx.fillRect(100, playerY - 50, 50, 50);
+
+            // Request next frame
+            requestAnimationFrame(gameLoop);
+        }
+
+        // Start the game loop
+        gameLoop();
+    </script>
+</body>
+</html>
